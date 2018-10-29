@@ -23,7 +23,7 @@ import spread
 
 class SpreadTest(unittest.TestCase):
 
-    spread_name = bytes(str(spread.DEFAULT_SPREAD_PORT) + "@localhost", "ascii")
+    spread_name = bytes(str(spread.DEFAULT_SPREAD_PORT), "ascii")
 
     conn_counter = 0
 

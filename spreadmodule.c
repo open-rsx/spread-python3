@@ -990,7 +990,7 @@ spread_connect(PyObject *self, PyObject *args, PyObject* kwds)
 		PyOS_snprintf(default_daemon, sizeof(default_daemon),
 			      "%d@localhost", DEFAULT_SPREAD_PORT);
 		*/
-		sprintf(default_daemon, "%d@localhost", DEFAULT_SPREAD_PORT);
+		sprintf(default_daemon, "%d", DEFAULT_SPREAD_PORT);
 		daemon = default_daemon;
 	}
 
