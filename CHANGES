@@ -1,8 +1,10 @@
-Release 1.5:  changes since release 1.5b1
+Release 1.6:  changes since release 1.5b1
 -----------------------------------------
-Release date:  2005-01-25
+Release date:  2018-10-29
 
-No changes since 1.5b1.
+- Ported to Python 3
+
+- Tested with Spread 5
 
 
 Release 1.5b1:  changes since release 1.5a1
