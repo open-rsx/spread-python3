@@ -1,0 +1,17 @@
+language: python
+dist: xenial
+sudo: true
+before_install:
+  - sudo add-apt-repository http://packages.cor-lab.de/ubuntu/
+  - wget -q http://packages.cor-lab.de/keys/cor-lab.asc -O- | sudo apt-key add -
+  - sudo apt-get update -q
+  - sudo apt-get install spread
+python:
+  - 3.6
+  - 3.7
+install:
+  - python setup.py install
+script:
+  - spread -n localhost &
+  - python testspread.py
+  - killall spread
