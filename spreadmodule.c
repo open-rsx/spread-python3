@@ -191,25 +191,19 @@ static PyTypeObject GroupId_Type = {
  CAUSED_BY_DISCONNECT | CAUSED_BY_NETWORK)
 
 static PyObject *
-new_membership_msg(int type, PyObject *group, int num_members,
+new_membership_msg(int type, PyObject *group, unsigned int num_members,
 		   char (*members)[MAX_GROUP_NAME], char *buffer, int size)
 {
 	MembershipMsg *self;
-	int32 num_extra_members;
-	group_id grp_id;
-	/* Although extra_members isn't referenced unless num_extra_members is
-	 * greater than 0, gcc doesn't realize that, so force extra_members to
-	 * be initialized (suppressing a nuisance complaint from the compiler).
-	 */
 	membership_info  memb_info;
-	int           max_num_vs_sets = MAX_VSSETS;
-	vs_set_info   vssets_buffer[MAX_VSSETS];
-	vs_set_info   *vssets = vssets_buffer;
+	unsigned int     max_num_vs_sets = MAX_VSSETS;
+	vs_set_info      vssets_buffer[MAX_VSSETS];
+	vs_set_info      *vssets = vssets_buffer;
 	unsigned int     my_vsset_index;
-	int           num_vs_sets, max_members;
+	unsigned int     num_vs_sets, max_members;
 	char             vs_members_buffer[MAX_MEMBERS][MAX_GROUP_NAME];
 	char             (*vs_members)[MAX_GROUP_NAME] = vs_members_buffer;
-	int           i, j, ret;
+	unsigned int     i, j, ret;
 
 	assert(group != NULL);
 	self = PyObject_New(MembershipMsg, &MembershipMsg_Type);
@@ -240,7 +234,7 @@ new_membership_msg(int type, PyObject *group, int num_members,
 		Py_DECREF(self);   /* printf("BUG: membership message does not have valid body\n"); */
 		return NULL;
 	}
-		
+
 	if ( type & REG_MEMB_MESS ) {
 		self->group_id = new_group_id(memb_info.gid);
 		if (self->group_id == NULL) {
@@ -1232,7 +1226,7 @@ PyMODINIT_FUNC PyInit_spread(void)
 	if (m == NULL)
     {
         printf("Error creating the module\n");
-		return;
+		return NULL;
     }
     d = PyModule_GetDict(m);
 
@@ -1241,54 +1235,54 @@ PyMODINIT_FUNC PyInit_spread(void)
     if (PyType_Ready(&Mailbox_Type) < 0)
     {
         printf("Mailbox_Type not ready\n");
-        return;
+        return NULL;
     }
     if (PyType_Ready(&RegularMsg_Type) < 0)
     {
         printf("RegularMsg_Type not ready\n");
-        return;
+        return NULL;
     }
     if (PyType_Ready(&MembershipMsg_Type) < 0)
     {
         printf("MembershipMsg_Type not ready\n");
-        return;
+        return NULL;
     }
 
 	/* PyModule_AddObject() DECREFs its third argument */
 	if (PyDict_SetItemString(d, "MailboxType", (PyObject *)&Mailbox_Type) != 0)
     {
         printf("Error adding Mailbox_Type\n");
-        return;
+        return NULL;
     }
 	if (PyDict_SetItemString(d, "RegularMsgType", (PyObject *)&RegularMsg_Type) != 0)
 	{
         printf("Error adding RegularMsg_Type\n");
-        return;
+        return NULL;
     }
 	if (PyDict_SetItemString(d, "MembershipMsgType", (PyObject *)&MembershipMsg_Type) != 0)
 	{
         printf("Error adding MembershipMsg_Type\n");
-        return;
+        return NULL;
     }
 
 	/* Create the exception, if necessary */
 	if (SpreadError == NULL) {
 		SpreadError = PyErr_NewException("spread.error", NULL, NULL);
 		if (SpreadError == NULL)
-			return;
+			return NULL;
 	}
 
 	/* Add the exception to the module */
 	if (PyDict_SetItemString(d, "error", SpreadError) != 0)
 	{
         printf("Error adding SpreadError\n");
-        return;
+        return NULL;
     }
 
 	/* Add the Spread symbolic constants to the module */
 	for (p = spread_constants; p->name != NULL; p++) {
 		if (PyModule_AddIntConstant(m, p->name, p->value) < 0)
-			return;
+			return NULL;
 	}
 
     return m;
