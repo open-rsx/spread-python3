@@ -17,7 +17,7 @@ else:
     )
 
 setup(name='SpreadModule',
-      version='1.6.dev0',
+      version='1.6',
 
       maintainer='open-rsx',
       url='https://github.com/open-rsx/spread-python3',
